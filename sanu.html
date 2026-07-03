@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Proposition: On the Existence of Us</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=JetBrains+Mono:wght@400;500;600&family=Caveat:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #122720;
+    --bg-soft: #16302633;
+    --panel: #1a3128;
+    --chalk: #f3ede1;
+    --chalk-dim: #b9c4bb;
+    --pink: #ff8aa1;
+    --gold: #e6b93d;
+    --rule: rgba(243,237,225,0.16);
+    --rule-strong: rgba(243,237,225,0.3);
+    --serif: 'Fraunces', serif;
+    --mono: 'JetBrains Mono', monospace;
+    --hand: 'Caveat', cursive;
+  }
+
+  *{ box-sizing:border-box; }
+
+  html{ scroll-behavior:smooth; }
+
+  body{
+    margin:0;
+    background:
+      radial-gradient(circle at 15% 8%, rgba(255,255,255,0.035), transparent 40%),
+      radial-gradient(circle at 85% 30%, rgba(255,255,255,0.025), transparent 45%),
+      var(--bg);
+    color:var(--chalk);
+    font-family: var(--mono);
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+
+  /* subtle chalk dust texture */
+  body::before{
+    content:"";
+    position:fixed; inset:0;
+    pointer-events:none;
+    opacity:0.05;
+    background-image:
+      radial-gradient(1px 1px at 10% 20%, var(--chalk), transparent),
+      radial-gradient(1px 1px at 30% 70%, var(--chalk), transparent),
+      radial-gradient(1px 1px at 60% 15%, var(--chalk), transparent),
+      radial-gradient(1px 1px at 80% 55%, var(--chalk), transparent),
+      radial-gradient(1px 1px at 45% 90%, var(--chalk), transparent),
+      radial-gradient(1px 1px at 95% 80%, var(--chalk), transparent);
+    background-size: 300px 300px;
+    z-index:1;
+  }
+
+  .wrap{
+    position:relative;
+    z-index:2;
+    max-width: 560px;
+    margin: 0 auto;
+    padding: 48px 22px 120px;
+  }
+
+  /* ---------- HERO ---------- */
+  .eyebrow{
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 14px;
+  }
+  .eyebrow::before{ content:"§ "; opacity:0.8; }
+
+  h1.title{
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: clamp(32px, 9vw, 46px);
+    line-height: 1.08;
+    margin: 0 0 10px;
+    letter-spacing: -0.01em;
+  }
+  h1.title em{
+    font-style: italic;
+    font-weight: 500;
+    color: var(--pink);
+  }
+
+  .subtitle{
+    font-family: var(--hand);
+    font-size: 22px;
+    color: var(--chalk-dim);
+    margin: 0 0 34px;
+  }
+
+  .hero-rule{
+    border:none;
+    border-top: 1px dashed var(--rule-strong);
+    margin: 0 0 34px;
+  }
+
+  /* ---------- GIVEN BLOCK ---------- */
+  .given{
+    background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0));
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    padding: 22px 20px;
+    margin-bottom: 40px;
+  }
+  .given .label{
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 14px;
+    color: var(--gold);
+    margin-bottom: 12px;
+  }
+  .given dl{ margin:0; }
+  .given .def{
+    display:flex;
+    gap: 10px;
+    font-size: 14.5px;
+    line-height: 1.6;
+    margin-bottom: 8px;
+    color: var(--chalk);
+  }
+  .given .def:last-child{ margin-bottom:0; }
+  .given .sym{
+    color: var(--pink);
+    flex-shrink:0;
+    font-weight:600;
+  }
+
+  /* ---------- STEPS ---------- */
+  .step{
+    margin-bottom: 38px;
+    padding-top: 26px;
+    border-top: 1px dashed var(--rule);
+  }
+  .step:first-of-type{ border-top: none; }
+
+  .step-num{
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 13px;
+    color: var(--gold);
+    letter-spacing: 0.04em;
+    margin-bottom: 8px;
+  }
+
+  .step-eq{
+    font-size: 16px;
+    color: var(--pink);
+    background: rgba(255,138,161,0.07);
+    border-left: 2px solid var(--pink);
+    padding: 10px 12px;
+    border-radius: 3px;
+    margin: 8px 0 12px;
+    overflow-x:auto;
+    white-space: nowrap;
+  }
+
+  .step-text{
+    font-family: var(--serif);
+    font-size: 17px;
+    line-height: 1.55;
+    color: var(--chalk);
+  }
+
+  .margin-note{
+    font-family: var(--hand);
+    font-size: 18px;
+    color: var(--chalk-dim);
+    margin-top: 8px;
+    padding-left: 14px;
+    border-left: 2px solid var(--rule-strong);
+  }
+
+  /* ---------- FIGURE (heart curve) ---------- */
+  .figure{
+    margin: 44px 0;
+    text-align:center;
+  }
+  .figure canvas{
+    width: 100%;
+    max-width: 380px;
+    height: auto;
+    touch-action: none;
+  }
+  .figure-caption{
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 13.5px;
+    color: var(--chalk-dim);
+    margin-top: 10px;
+  }
+  .figure-eq{
+    font-size: 12.5px;
+    color: var(--gold);
+    margin-top: 4px;
+    word-break: break-word;
+  }
+
+  /* ---------- QED ---------- */
+  .qed{
+    margin: 46px 0 10px;
+    padding: 22px 20px;
+    border: 1px solid var(--rule-strong);
+    border-radius: 6px;
+    background: rgba(230,185,61,0.05);
+    position:relative;
+  }
+  .qed-text{
+    font-family: var(--serif);
+    font-size: 18px;
+    line-height:1.6;
+  }
+  .qed-mark{
+    position:absolute;
+    bottom:14px; right:18px;
+    font-size:20px;
+    color: var(--gold);
+  }
+
+  /* ---------- COROLLARY / QUESTION ---------- */
+  .corollary{
+    margin-top: 60px;
+    text-align:center;
+  }
+  .corollary .eyebrow{
+    justify-content:center;
+    display:flex;
+  }
+  .corollary h2{
+    font-family: var(--serif);
+    font-weight:600;
+    font-size: clamp(26px, 7.5vw, 34px);
+    line-height:1.2;
+    margin: 12px 0 8px;
+  }
+  .corollary p{
+    font-family: var(--hand);
+    font-size: 20px;
+    color: var(--chalk-dim);
+    margin: 0 0 34px;
+  }
+
+  .btn-row{
+    position: relative;
+    display:flex;
+    gap: 18px;
+    justify-content:center;
+    align-items:center;
+    min-height: 140px;
+  }
+
+  .btn{
+    font-family: var(--mono);
+    font-weight:600;
+    font-size: 16px;
+    padding: 15px 30px;
+    border-radius: 40px;
+    border: none;
+    cursor:pointer;
+    letter-spacing:0.02em;
+  }
+
+  .btn-yes{
+    background: var(--pink);
+    color: #241016;
+    box-shadow: 0 6px 22px rgba(255,138,161,0.35);
+    transition: transform 0.15s ease;
+  }
+  .btn-yes:active{ transform: scale(0.96); }
+
+  .btn-no{
+    background: transparent;
+    color: var(--chalk-dim);
+    border: 1px solid var(--rule-strong);
+    position: relative;
+    transition: left 0.18s ease, top 0.18s ease, transform 0.18s ease;
+  }
+
+  .dodge-note{
+    font-family: var(--hand);
+    font-size: 16px;
+    color: var(--gold);
+    margin-top: 18px;
+    min-height: 22px;
+  }
+
+  /* ---------- REVEAL ---------- */
+  .reveal{
+    display:none;
+    margin-top: 40px;
+    text-align:center;
+    animation: fadeUp 0.6s ease forwards;
+  }
+  .reveal.show{ display:block; }
+  @keyframes fadeUp{
+    from{ opacity:0; transform: translateY(14px); }
+    to{ opacity:1; transform: translateY(0); }
+  }
+  .reveal h3{
+    font-family: var(--serif);
+    font-size: 26px;
+    color: var(--pink);
+    margin-bottom: 8px;
+  }
+  .reveal p{
+    font-family: var(--serif);
+    font-size: 16px;
+    color: var(--chalk-dim);
+    line-height:1.6;
+  }
+  .reveal canvas{
+    width: 220px;
+    height: auto;
+    margin: 18px auto 0;
+    display:block;
+  }
+
+  footer{
+    text-align:center;
+    font-size: 12px;
+    color: var(--chalk-dim);
+    opacity:0.5;
+    margin-top: 70px;
+    letter-spacing:0.05em;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    html{ scroll-behavior:auto; }
+  }
+
+  .btn-yes:focus-visible, .btn-no:focus-visible{
+    outline: 2px solid var(--gold);
+    outline-offset: 3px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="eyebrow">Proposition 1</div>
+  <h1 class="title">On the Existence <br>of <em>Us</em></h1>
+  <p class="subtitle">a proof, respectfully submitted to Sanam</p>
+  <hr class="hero-rule">
+
+  <div class="given">
+    <div class="label">Given</div>
+    <dl>
+      <div class="def"><span class="sym">S</span><span>= Sanam. Prime — divisible by nothing except herself and the truth.</span></div>
+      <div class="def"><span class="sym">M</span><span>= the set of all things Sanam loves. Mathematics ∈ M, provably.</span></div>
+      <div class="def"><span class="sym">me</span><span>= a person attempting, for the first time, to write a proof that matters.</span></div>
+    </dl>
+  </div>
+
+  <div class="step">
+    <div class="step-num">Step 1 — Existence</div>
+    <div class="step-eq">∃ x : f(x) = joy, where x = your smile</div>
+    <div class="step-text">There exists a smile that solves for happiness in under a second. I've seen the solution. I'm not making this up for the proof.</div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">Step 2 — Uniqueness</div>
+    <div class="step-eq">∀ y ≠ S : f(y) &lt; f(S)</div>
+    <div class="step-text">For every other person y in my sample space, the output is smaller. I've checked. This is not a small sample.</div>
+    <div class="margin-note">(this step took zero effort to prove)</div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">Step 3 — Continuity</div>
+    <div class="step-eq">lim (t → anytime) think(t) = you</div>
+    <div class="step-text">No matter which instant I zoom into, there's no gap where you're not the answer. The function never jumps. It never breaks. It's just continuous, embarrassingly so.</div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">Step 4 — Convergence</div>
+    <div class="step-eq">Σ (every reason I like you) → does not diverge</div>
+    <div class="step-text">I tried to list every reason. The series kept growing. It never diverged to infinity and never settled to zero — it just kept converging, patiently, on you.</div>
+  </div>
+
+  <div class="figure">
+    <canvas id="heartProof" width="380" height="320"></canvas>
+    <div class="figure-caption">Figure 1 — the only curve I've ever wanted to solve for</div>
+    <div class="figure-eq">x(t) = 16 sin³t &nbsp; · &nbsp; y(t) = 13cos t − 5cos 2t − 2cos 3t − cos 4t</div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">Step 5 — The trivial case</div>
+    <div class="step-text">You already knew all of this. A theorem this obvious barely needed a proof. I wrote one anyway, because I know you'd appreciate the rigor.</div>
+  </div>
+
+  <div class="qed">
+    <div class="qed-text">Therefore, by Steps 1 through 5, it follows necessarily and without exception that I love you.</div>
+    <div class="qed-mark">∎</div>
+  </div>
+
+  <div class="corollary">
+    <div class="eyebrow">Corollary</div>
+    <h2>Will you go out with me?</h2>
+    <p>(a yes/no question, for once, with no proof required)</p>
+
+    <div class="btn-row" id="btnRow">
+      <button class="btn btn-yes" id="yesBtn">Yes, obviously</button>
+      <button class="btn btn-no" id="noBtn">No</button>
+    </div>
+    <div class="dodge-note" id="dodgeNote"></div>
+
+    <div class="reveal" id="reveal">
+      <h3>∎ Proof complete.</h3>
+      <p>You just made every theorem in this document true.<br>Q.E.D., forever.</p>
+      <canvas id="heartFilled" width="220" height="190"></canvas>
+    </div>
+  </div>
+
+  <footer>for sanam — the only constant i never want to solve away</footer>
+</div>
+
+<script>
+  // ---------- heart curve drawing (outline, chalk-stroke animation) ----------
+  function heartPoints(scale, cx, cy){
+    const pts = [];
+    const steps = 200;
+    for(let i=0;i<=steps;i++){
+      const t = (i/steps) * Math.PI * 2;
+      const x = 16 * Math.pow(Math.sin(t), 3);
+      const y = 13*Math.cos(t) - 5*Math.cos(2*t) - 2*Math.cos(3*t) - Math.cos(4*t);
+      pts.push([cx + x*scale, cy - y*scale]);
+    }
+    return pts;
+  }
+
+  function drawOutline(canvas, opts){
+    const ctx = canvas.getContext('2d');
+    const w = canvas.width, h = canvas.height;
+    const pts = heartPoints(opts.scale, w/2, h/2 + opts.yOffset);
+    let progress = 0;
+    const total = pts.length;
+
+    function frame(){
+      ctx.clearRect(0,0,w,h);
+      ctx.strokeStyle = opts.color;
+      ctx.lineWidth = opts.lineWidth;
+      ctx.lineJoin = 'round';
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      const count = Math.max(2, Math.floor(progress));
+      for(let i=0;i<count;i++){
+        const [x,y] = pts[i];
+        if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+      }
+      ctx.stroke();
+      progress += 3;
+      if(progress < total){
+        requestAnimationFrame(frame);
+      }
+    }
+    requestAnimationFrame(frame);
+  }
+
+  function drawFilled(canvas, opts){
+    const ctx = canvas.getContext('2d');
+    const w = canvas.width, h = canvas.height;
+    const pts = heartPoints(opts.scale, w/2, h/2 + opts.yOffset);
+    ctx.clearRect(0,0,w,h);
+    ctx.beginPath();
+    pts.forEach(([x,y], i)=>{
+      if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+    });
+    ctx.closePath();
+    ctx.fillStyle = opts.color;
+    ctx.fill();
+  }
+
+  const proofCanvas = document.getElementById('heartProof');
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        drawOutline(proofCanvas, { scale: 9, yOffset: -6, color: '#ff8aa1', lineWidth: 2.4 });
+        io.disconnect();
+      }
+    });
+  }, { threshold: 0.4 });
+  io.observe(proofCanvas);
+
+  // ---------- Yes / No interaction ----------
+  const yesBtn = document.getElementById('yesBtn');
+  const noBtn = document.getElementById('noBtn');
+  const btnRow = document.getElementById('btnRow');
+  const dodgeNote = document.getElementById('dodgeNote');
+  const reveal = document.getElementById('reveal');
+
+  const denialMessages = [
+    "This limit does not exist.",
+    "Undefined: division by zero.",
+    "That option is not in the domain.",
+    "No real solutions found.",
+    "Out of bounds — try again.",
+    "That branch was pruned.",
+    "Error 404: option not found."
+  ];
+  let attempt = 0;
+  let dodging = false;
+
+  function moveNoButton(){
+    dodging = true;
+    const rowRect = btnRow.getBoundingClientRect();
+    const btnRect = noBtn.getBoundingClientRect();
+    const maxX = rowRect.width - btnRect.width - 8;
+    const maxY = rowRect.height - btnRect.height - 8;
+    const newX = Math.max(8, Math.random() * maxX);
+    const newY = Math.max(8, Math.random() * maxY);
+    noBtn.style.position = 'absolute';
+    noBtn.style.left = newX + 'px';
+    noBtn.style.top = newY + 'px';
+    attempt++;
+    dodgeNote.textContent = denialMessages[Math.min(attempt-1, denialMessages.length-1)];
+  }
+
+  function proximityCheck(clientX, clientY){
+    const rect = noBtn.getBoundingClientRect();
+    const cx = rect.left + rect.width/2;
+    const cy = rect.top + rect.height/2;
+    const dist = Math.hypot(clientX - cx, clientY - cy);
+    if(dist < 70){
+      moveNoButton();
+    }
+  }
+
+  document.addEventListener('mousemove', (e)=>{
+    proximityCheck(e.clientX, e.clientY);
+  });
+  document.addEventListener('touchmove', (e)=>{
+    const t = e.touches[0];
+    if(t) proximityCheck(t.clientX, t.clientY);
+  }, { passive:true });
+
+  noBtn.addEventListener('touchstart', (e)=>{
+    e.preventDefault();
+    moveNoButton();
+  }, { passive:false });
+
+  noBtn.addEventListener('click', (e)=>{
+    e.preventDefault();
+    moveNoButton();
+  });
+
+  yesBtn.addEventListener('click', ()=>{
+    reveal.classList.add('show');
+    btnRow.style.display = 'none';
+    dodgeNote.textContent = '';
+    reveal.scrollIntoView({ behavior:'smooth', block:'center' });
+    const filled = document.getElementById('heartFilled');
+    requestAnimationFrame(()=> drawFilled(filled, { scale: 6.2, yOffset: -4, color: '#ff8aa1' }));
+  });
+</script>
+</body>
+</html>
+	 
